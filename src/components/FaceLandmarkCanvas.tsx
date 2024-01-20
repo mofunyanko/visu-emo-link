@@ -131,6 +131,7 @@ const FaceLandmarkCanvas = () => {
     faceapi.matchDimensions(canvas, displaySize);
 
     setInterval(async () => {
+      canvas.getContext("2d")?.clearRect(0, 0, canvas.width, canvas.height);
       const detections = await faceapi
         .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
         .withFaceLandmarks()
@@ -210,7 +211,7 @@ const FaceLandmarkCanvas = () => {
       <div id="relative" className="flex justify-center">
         <video
           id="video"
-          className="w-9/12 h-auto absolute"
+          className="h-3/4 absolute"
           ref={videoRef}
           loop={true}
           muted={true}
