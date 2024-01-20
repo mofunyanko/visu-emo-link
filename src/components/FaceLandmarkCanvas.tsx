@@ -202,7 +202,7 @@ const FaceLandmarkCanvas = () => {
     <div className="flex flex-col items-center">
       <div className="flex justify-center gap-10 mt-5 mb-10">
         <button
-          className="self-end bg-purple-700 hover:bg-purple-600 transition text-white px-2 py-1 rounded mb-2 shadow-md text-sm sm:text-base"
+          className="self-end bg-purple-500 hover:bg-purple-600 transition text-white px-2 py-1 rounded mb-2 shadow-md text-sm sm:text-base"
           onClick={toggleAvatarCreatorView}
         >
           {"アバターを作成する"}

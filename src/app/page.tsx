@@ -13,12 +13,12 @@ const FaceLandmarkCanvas = dynamic(
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center px-2 pt-10 bg-gradient-to-r from-purple-500 to-blue-800 min-h-screen text-white">
+    <div className="flex flex-col items-center px-2 pt-10 bg-gradient-to-r from-purple-300 to-blue-500 min-h-screen text-white">
       <Head>
-        <title>ViseEmoLink</title>
+        <title>VisuEmoLink</title>
       </Head>
       <h1 className="text-xl md:text-4xl font-bold mb-2 text-shadow text-center">
-        ViseEmoLink
+        VisuEmoLink
       </h1>
       <div className="flex justify-center w-full">
         <FaceLandmarkCanvas />
