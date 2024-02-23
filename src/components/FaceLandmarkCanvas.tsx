@@ -148,7 +148,7 @@ const FaceLandmarkCanvas = () => {
 
         drawEmoji(canvas, emoji);
       })
-    })
+    }, 3000)
   }
 
 
