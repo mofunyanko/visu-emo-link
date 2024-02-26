@@ -210,7 +210,7 @@ const FaceLandmarkCanvas = () => {
 
         drawEmoji(canvas, emoji);
       })
-    }, 5000)
+    }, 3000)
   }
 
 
@@ -256,7 +256,7 @@ const FaceLandmarkCanvas = () => {
     context.font = `${fontSize}px Arial`
     context.fillStyle = "white";
 
-    const position = { x: canvas.width - fontSize, y: fontSize + 50 };
+    const position = { x: canvas.width - fontSize, y: fontSize };
     context.fillText(emoji, position.x - margin, position.y + margin);
   }
 
@@ -264,14 +264,14 @@ const FaceLandmarkCanvas = () => {
     const context = canvas.getContext("2d") as CanvasRenderingContext2D;
     const fontSize = 150;
     const margin = 20;
-    const position = { x: 0 + fontSize, y: fontSize + 50 };
+    const position = { x: fontSize, y: fontSize };
     if (emoji == "thumbs_up" || emoji == "thumbs_down") {
       const hEmoji = handmark[emoji]
       context.font = `${fontSize}px Arial`
       context.fillStyle = "red";
-      context.fillText(hEmoji, position.x + margin, position.y + margin);
+      context.fillText(hEmoji, margin, position.y + margin);
     } else {
-      context.fillText("", position.x + margin, position.y + margin);
+      context.fillText("", margin, position.y + margin);
     }
   }
 
