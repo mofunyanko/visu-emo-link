@@ -6,10 +6,15 @@ import AvatarCanvas from "./AvatarCanvas";
 import FaceLandmarkManager from "@/class/FaceLandmarkManager";
 import ReadyPlayerCreator from "./ReadyPlayerCreator";
 import * as faceapi from '@vladmandic/face-api'
+import * as handpose from "@tensorflow-models/handpose"
+
+import * as fp from "fingerpose"
 
 const MODEL_PATH = '/models'
 
 const FaceLandmarkCanvas = () => {
+  const handmark: {[key: string]: string} = {"thumbs_up": "👍", "thumbs_down": "👎" }
+  // const [handEmoji, setHandEmoji] = useState<string>("")
   const videoRef = useRef<HTMLVideoElement>(null);
   const lastVideoTimeRef = useRef(-1);
   const requestRef = useRef(0);
@@ -23,7 +28,15 @@ const FaceLandmarkCanvas = () => {
     height: number;
   }>();
 
-
+  const thumbsDownGesture = new fp.GestureDescription("thumbs_down");
+  thumbsDownGesture.addCurl(fp.Finger.Thumb, fp.FingerCurl.NoCurl);
+  thumbsDownGesture.addDirection(fp.Finger.Thumb, fp.FingerDirection.VerticalDown, 1.0);
+  thumbsDownGesture.addDirection(fp.Finger.Thumb, fp.FingerDirection.DiagonalDownLeft, 0.9);
+  thumbsDownGesture.addDirection(fp.Finger.Thumb, fp.FingerDirection.DiagonalDownRight, 0.9);
+  for(let finger of [fp.Finger.Index, fp.Finger.Middle, fp.Finger.Ring, fp.Finger.Pinky]) {
+    thumbsDownGesture.addCurl(finger, fp.FingerCurl.FullCurl, 1.0);
+    thumbsDownGesture.addCurl(finger, fp.FingerCurl.HalfCurl, 0.9);
+  }
 
   const toggleAvatarView = () => setAvatarView((prev) => !prev);
   const toggleAvatarCreatorView = () => setShowAvatarCreator((prev) => {
@@ -120,6 +133,55 @@ const FaceLandmarkCanvas = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const runHandpose = async () => {
+      const net = await handpose.load();
+      setInterval(() => {
+        detect(net);
+      }, 1000);
+    }
+
+    const detect = async (net: handpose.HandPose) => {
+      interface Keypoint3D {
+        x: number;
+        y: number;
+        z: number;
+    }
+      if (
+        typeof videoRef.current !== "undefined" &&
+        videoRef.current !== null
+      ) {
+        const hand = await net.estimateHands(videoRef.current);
+
+        let handEmoji: string = "";
+        if (hand.length > 0) {
+          const GE = new fp.GestureEstimator([
+            fp.Gestures.ThumbsUpGesture,
+            thumbsDownGesture
+          ]);
+          const gesture = await GE.estimate(hand[0].landmarks as unknown as Keypoint3D[], 4);
+          if (gesture.gestures !== undefined && gesture.gestures.length > 0) {
+            const confidence = gesture.gestures.map(
+              (prediction) => prediction.score
+            );
+
+            const maxConfidence = confidence.indexOf(
+              Math.max.apply(null, confidence)
+            );
+            if (gesture.gestures[maxConfidence].name == "thumbs_up" || gesture.gestures[maxConfidence].name == "thumbs_down") {
+              handEmoji = gesture.gestures[maxConfidence].name
+            } else {
+              handEmoji = ""
+            }
+          }
+        }
+        const canvas = document.getElementById('emoji') as HTMLCanvasElement
+        drawHandEmoji(canvas, handEmoji)
+      }
+    }
+    runHandpose()
+  }, [])
+
   const videoEvent = () => {
     const video = videoRef.current as HTMLVideoElement
     const canvas = faceapi.createCanvasFromMedia(video);
@@ -148,7 +210,7 @@ const FaceLandmarkCanvas = () => {
 
         drawEmoji(canvas, emoji);
       })
-    }, 3000)
+    }, 5000)
   }
 
 
@@ -196,6 +258,21 @@ const FaceLandmarkCanvas = () => {
 
     const position = { x: canvas.width - fontSize, y: fontSize + 50 };
     context.fillText(emoji, position.x - margin, position.y + margin);
+  }
+
+  const drawHandEmoji = (canvas: HTMLCanvasElement, emoji: string) => {
+    const context = canvas.getContext("2d") as CanvasRenderingContext2D;
+    const fontSize = 150;
+    const margin = 20;
+    const position = { x: 0 + fontSize, y: fontSize + 50 };
+    if (emoji == "thumbs_up" || emoji == "thumbs_down") {
+      const hEmoji = handmark[emoji]
+      context.font = `${fontSize}px Arial`
+      context.fillStyle = "red";
+      context.fillText(hEmoji, position.x + margin, position.y + margin);
+    } else {
+      context.fillText("", position.x + margin, position.y + margin);
+    }
   }
 
   return (
