@@ -9,6 +9,7 @@ import * as faceapi from '@vladmandic/face-api'
 import * as handpose from "@tensorflow-models/handpose"
 
 import * as fp from "fingerpose"
+import { Finger, FingerDirection } from "fingerpose";
 
 const MODEL_PATH = '/models'
 
@@ -27,6 +28,12 @@ const FaceLandmarkCanvas = () => {
     width: number;
     height: number;
   }>();
+
+  const thumbsUpGesture = fp.Gestures.ThumbsUpGesture
+  thumbsUpGesture.addDirection(Finger.Index, FingerDirection.DiagonalUpLeft, 0);
+  thumbsUpGesture.addDirection(Finger.Index, FingerDirection.HorizontalLeft, 0);
+  thumbsUpGesture.addDirection(Finger.Index, FingerDirection.HorizontalRight, 0);
+  thumbsUpGesture.addDirection(Finger.Index, FingerDirection.DiagonalUpRight, 0);
 
   const thumbsDownGesture = new fp.GestureDescription("thumbs_down");
   thumbsDownGesture.addCurl(fp.Finger.Thumb, fp.FingerCurl.NoCurl);
@@ -157,6 +164,7 @@ const FaceLandmarkCanvas = () => {
         if (hand.length > 0) {
           const GE = new fp.GestureEstimator([
             fp.Gestures.ThumbsUpGesture,
+            fp.Gestures.VictoryGesture,
             thumbsDownGesture
           ]);
           const gesture = await GE.estimate(hand[0].landmarks as unknown as Keypoint3D[], 4);
