@@ -258,7 +258,7 @@ const FaceLandmarkCanvas = () => {
 
   const drawEmoji = (canvas: HTMLCanvasElement, emoji: string) => {
     const context = canvas.getContext("2d") as CanvasRenderingContext2D;
-    const fontSize = 150;
+    const fontSize = 100;
     const margin = 20;
 
     context.font = `${fontSize}px Arial`
@@ -270,7 +270,7 @@ const FaceLandmarkCanvas = () => {
 
   const drawHandEmoji = (canvas: HTMLCanvasElement, emoji: string) => {
     const context = canvas.getContext("2d") as CanvasRenderingContext2D;
-    const fontSize = 150;
+    const fontSize = 100;
     const margin = 20;
     const position = { x: fontSize, y: fontSize };
     if (emoji == "thumbs_up" || emoji == "thumbs_down") {
@@ -296,7 +296,7 @@ const FaceLandmarkCanvas = () => {
       <div id="relative" className="flex justify-center">
         <video
           id="video"
-          className="h-3/4 absolute"
+          className="absolute"
           ref={videoRef}
           loop={true}
           muted={true}
