@@ -12,7 +12,7 @@ git clone https://github.com/mofunyanko/visu-emo-link.git
 ```
 2. ディレクトリを移動する
 ```
-cd mediapipe-facelandmarker-demo
+cd visu-emo-link
 ```
 3. 必要な依存関係をインストールする
 ```
