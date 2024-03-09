@@ -24,7 +24,7 @@ npm run dev
 ```
 
 ### 技術構成
-- [ReadyPlyaerMe](https://github.com/readyplayerme/rpm-react-sdk)
+- [ReadyPlayerMe](https://github.com/readyplayerme/rpm-react-sdk)
 - [Vercel](https://vercel.com/)
 - [Next.js](https://nextjs.org/)
 - [Three.js](https://threejs.org/)
