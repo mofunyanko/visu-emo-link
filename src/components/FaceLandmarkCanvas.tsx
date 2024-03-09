@@ -259,7 +259,7 @@ const FaceLandmarkCanvas = () => {
   const drawEmoji = (canvas: HTMLCanvasElement, emoji: string) => {
     const context = canvas.getContext("2d") as CanvasRenderingContext2D;
     const fontSize = 100;
-    const margin = 20;
+    const margin = 30;
 
     context.font = `${fontSize}px Arial`
     context.fillStyle = "white";
